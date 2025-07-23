@@ -57,3 +57,33 @@ enum Roles {
 let userRoleVar: 'admin' | 'editor' | 'guest' = 'admin';
 
 let userRole: Roles = Roles.Admin;
+
+//null type
+let a: null | string;
+a = null;
+a= 'Hi!';
+
+//any vs undefined vs unknown
+function getValue(): any {
+    return "hello"; // or return 42, {}, [], true, etc.
+}
+let result = getValue();
+result.toUpperCase(); // compiles fine, even if result is not a string!
+
+function doNothing(): undefined {
+    return undefined; // must explicitly return undefined
+}
+
+let value1: unknown = "hello";
+//value1.toUpperCase(); // ❌ Error: Object is of type 'unknown'
+if (typeof value1 === "string") {
+    console.log(value1.toUpperCase()); // ✅ Safe
+}
+
+//nullish coalescing operator
+//let result = value ?? defaultValue;
+// “If value is null or undefined, use defaultValue; otherwise, use value.”
+let userInput: string | null = null;
+
+let name3 = userInput ?? "Anonymous";
+console.log(name3); // "Anonymous"
