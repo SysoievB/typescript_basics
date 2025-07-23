@@ -53,4 +53,7 @@ enum Roles {
     Editor,
     Guest
 }
+//enum alternative
+let userRoleVar: 'admin' | 'editor' | 'guest' = 'admin';
+
 let userRole: Roles = Roles.Admin;
