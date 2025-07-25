@@ -1,8 +1,9 @@
-function add(a: number, b: number): number {
+function add(a: number, b: number = 0): number {//zero is a default param
     return a + b;
 }
 
 console.log(add(2, 7));
+console.log(add(2));
 
 function print(): void {
     console.log("Hello World");
@@ -31,3 +32,10 @@ function printMe(ms?: string) {
 
 printMe("Me");//Hello Me
 printMe();//Hello undefined
+
+//rest params
+const add1 = (...numbers: number[]) => {
+    return numbers.reduce((a, b) => a + b, 0);
+};
+
+console.log(add1(1,2,3,4,5));//15
