@@ -45,3 +45,5 @@ const dataEntries = {
     entry1: 0.51,
     entry2: -1.23
 } satisfies Record<string, number>;
+// Without `satisfies`, TypeScript would infer the type of `dataEntries` as `{ entry1: number; entry2: number; }` anyway.
+// The key benefit of `satisfies` is when the value might be more specific (like literal types) or when you need to validate a complex structure without widening its type.
