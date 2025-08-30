@@ -87,6 +87,3 @@ let userInput: string | null = null;
 
 let name3 = userInput ?? "Anonymous";
 console.log(name3); // "Anonymous"
-
-
-//
