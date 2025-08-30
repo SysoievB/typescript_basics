@@ -1,3 +1,4 @@
+// Type Guard => code pattern where you check for a certain type before you try to do smth with it at runtime
 type FileSource = { type: 'file'; path: string };
 const fileSource: FileSource = {
     type: 'file',
