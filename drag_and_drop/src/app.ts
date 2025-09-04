@@ -7,11 +7,47 @@
  * getElementById returns a generic HTMLElement.
  * But you know this element is specifically a <template> element.
  * TypeScript lets you type-cast it so you can safely use properties/methods of a HTMLTemplateElement*/
+//Project State Management
+class ProjectState {
+    private listeners: any[] = [];
+    private projects: any[] = [];
+    private static instance: ProjectState;
+
+    private constructor() {
+    }
+
+    static getInstance() {
+        if (this.instance) {
+            return this.instance;
+        }
+        this.instance = new ProjectState();
+        return this.instance;
+    }
+
+    addListener(listenerFn: Function) {
+        this.listeners.push(listenerFn);
+    }
+
+    addProject(title: string, description: string, numOfPeople: number) {
+        const newProject = {
+            id: Math.random().toString(),
+            title: title,
+            description: description,
+            people: numOfPeople
+        };
+        this.projects.push(newProject);
+        for (const listenerFn of this.listeners) {
+            listenerFn(this.projects.slice());
+        }
+    }
+}
+
+const projectState = ProjectState.getInstance();
 
 interface Validatable {
     value: string | number;
     required?: boolean;//? makes value optional
-    minLength: number | undefined;//makes value optional as well
+    minLength?: number;
     maxLength?: number;
     min?: number;
     max?: number;
@@ -132,7 +168,8 @@ class ProjectInput {
         const userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             const [title, description, people] = userInput;
-            console.log(title, description, people);
+            projectState.addProject(title, description, people);
+            //console.log(title, description, people);
             this.clearInputs();
         }
     }
@@ -147,4 +184,48 @@ class ProjectInput {
     }
 }
 
+class ProjectList {
+    templateElement: HTMLTemplateElement;
+    hostElement: HTMLDivElement;
+    element: HTMLElement;//section element
+    assignedProjects: any[];
+
+    constructor(private type: 'active' | 'finished') {
+        this.templateElement = document.getElementById('project-list')! as HTMLTemplateElement;
+        this.hostElement = document.getElementById('app')! as HTMLDivElement;
+        this.element = document.importNode(this.templateElement.content, true).firstElementChild as HTMLElement;
+        this.element.id = `${type}-projects`;
+        this.assignedProjects = [];
+
+        projectState.addListener((projects: any[]) => {
+            this.assignedProjects = projects;
+            this.renderProjects();
+        });
+
+        this.attach();
+        this.renderContent();
+    }
+
+    private renderProjects() {
+        const listEl = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+        for (const projectItem of this.assignedProjects) {
+            const listItem = document.createElement('li');
+            listItem.textContent = projectItem.title;
+            listEl.appendChild(listItem);
+        }
+    }
+
+    private renderContent() {
+        const listId = `${this.type}-projects-list`;
+        this.element.querySelector('ul')!.id = listId;
+        this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + ' PROJECTS';
+    }
+
+    private attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
+}
+
 const projectInput = new ProjectInput();
+const activePrList = new ProjectList('active');
+const finishedPrList = new ProjectList('finished');
