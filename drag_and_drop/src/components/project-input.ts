@@ -9,6 +9,16 @@ export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     descriptionInputElement: HTMLInputElement;
     peopleInputElement: HTMLInputElement;
 
+    /**
+     * ! (Non-null assertion operator)
+     * By default, TypeScript says: “Wait, what if the element is null?”
+     * Without it, TS would force you to handle null.
+     *
+     * as HTMLTemplateElement
+     * getElementById returns a generic HTMLElement.
+     * But you know this element is specifically a <template> element.
+     * TypeScript lets you type-cast it so you can safely use properties/methods of a HTMLTemplateElement*/
+
     constructor() {
         super('project-input', 'app', true, 'user-input');
         this.titleInputElement = this.element.querySelector(
